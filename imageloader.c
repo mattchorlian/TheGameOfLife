@@ -28,13 +28,14 @@ Image *readData(char *filename)
 {
 	//YOUR CODE HERE
 	FILE *fp = fopen(filename, "r");
-	Image *ptr = (Image*) malloc(sizeof(Image));
+	Image *ptr = (struct Image*) malloc(sizeof(Image));
 	int range;
 	char format[20];
 
 	fscanf(fp, "%s %d %d %d\n", format, &ptr->cols, &ptr->rows, &range);
 
-	Color** pixel_arr = (Color**) malloc(ptr->cols*ptr->rows*sizeof(Color**));
+	int product = ((ptr->cols) * (ptr->rows));
+	Color** pixel_arr = (Color**) malloc(product * sizeof(Color*));
 
 	for (int i = 0; i < ptr->cols*ptr->rows; i++) {
 		Color* pixel = (Color*) malloc(sizeof(Color*));
@@ -79,8 +80,14 @@ void writeData(Image *image)
 //Frees an image
 void freeImage(Image *image)
 {
-	//YOUR CODE HERE
 	if (image) {
+		int i = 0;
+		while (i < image->cols*image->rows) {
+			free(image->image[i]);
+			i++;
+		}
+		free(image->image);
 		free(image);
 	}
+	
 }
