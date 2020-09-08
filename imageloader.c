@@ -27,28 +27,22 @@
 Image *readData(char *filename) 
 {
 	//YOUR CODE HERE
+	FILE *fp = fopen(filename, "r");
 	Image *ptr = (Image*) malloc(sizeof(Image));
 	int range;
-	char form[20];
-	FILE *fp = fopen(filename, "r");
+	char format[20];
 
-	fscanf(fp,"%s %d %d %d\n ", form, &ptr->cols, &ptr->rows, &range); 
-	
-	Color ** pixel_arr = (Color **) calloc(ptr->rows, sizeof(Color*));
-	for (int i = 0; i < ptr->rows; i++) {
-		*(pixel_arr + i) = (Color *) calloc(ptr->cols, sizeof(Color));
-	}
-	
-	for (int j = 0; j < ptr->rows; j++) {
-		for (int k = 0; k < ptr->cols; k++) {
-			Color* this_pixel = (Color*) malloc (sizeof(Color));
-			fscanf(fp, "%d %d %d", &this_pixel->R, &this_pixel->G, &this_pixel->B);
-			pixel_arr[j][k] = this_pixel;
-		}
+	fscanf(fp, "%s %d %d %d\n", format, &ptr->cols, &ptr->rows, &range);
+
+	Color** pixel_arr = (Color**) malloc(ptr->cols*ptr->rows*sizeof(Color**));
+
+	for (int i = 0; i < ptr->cols*ptr->rows; i++) {
+		Color* pixel = (Color*) malloc(sizeof(Color*));
+		fscanf(fp, "%d %d %d" , &pixel->R, &pixel->G, &pixel->B);
+		pixel_arr[i] = pixel;
 	}
 
 	ptr->image = pixel_arr;
-
 
 	fclose(fp);
 
@@ -60,18 +54,33 @@ Image *readData(char *filename)
 void writeData(Image *image)
 {
 	//YOUR CODE HERE
-	printf("%s\n", P3);
-	printf(//columns and rows//)
-	printf(%i, "255\n");
-	
+	printf("P3\n");
+	printf("%d %d\n", image->cols, image->rows);
+	printf("%d\n", 255);	
 
+	Color** pixel_arr = image->image;
+	int i = 0;
+	for (int r = 0; r < image->rows; r++) {
+		for (int c = 0; c < image->cols; c++) {
+			if (c == image->cols - 1) {
+				printf("%3d %3d %3d", pixel_arr[i]->R, pixel_arr[i]->G, pixel_arr[i]->B);
+			} else {
+				printf("%3d %3d %3d   ", pixel_arr[i]->R, pixel_arr[i]->G, pixel_arr[i]->B);
+			}
+			
+			
+			i++;
+		}
+		printf("\n");
+		
+	}
 }
 
 //Frees an image
 void freeImage(Image *image)
 {
 	//YOUR CODE HERE
-	if (*image) {
+	if (image) {
 		free(image);
 	}
 }
