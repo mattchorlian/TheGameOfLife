@@ -7,7 +7,7 @@
 ** AUTHOR:      Dan Garcia  -  University of California at Berkeley
 **              Copyright (C) Dan Garcia, 2020. All rights reserved.
 **				Justin Yokota - Starter Code
-**				YOUR NAME HERE
+**				Matthew Chorlian
 **
 ** DATE:        2020-08-23
 **
@@ -22,12 +22,41 @@
 Color *evaluateOnePixel(Image *image, int row, int col)
 {
 	//YOUR CODE HERE
+	int index = (image->cols * (row - 1)) + col - 1;
+	Color* pixel = image->image[index];
+	int blue = pixel->B;
+	if (blue & 0b00000001 == 1) {
+		Color* white = (Color*) malloc(sizeof(Color*));
+		white->R = 255; white->G = 255; white->B = 255;
+		return white;
+	} else {
+		Color* black = (Color*) malloc(sizeof(Color*));
+		black->R = 0; black->G = 0; black->B = 0;
+		return black;
+	}
 }
 
 //Given an image, creates a new image extracting the LSB of the B channel.
 Image *steganography(Image *image)
 {
 	//YOUR CODE HERE
+	Image* secret = (Image*) malloc(sizeof(Image));
+	Color** secret_arr = (Color**) malloc(image->rows * image->cols * sizeof(Color*));
+
+	int index = 0;
+	for (int i = 1; i < image->rows + 1; i++) {
+		for (int j = 1; j < image->cols + 1; j++) {
+			Color* new_pixel = (Color*) malloc(sizeof(Color*));
+			new_pixel = evaluateOnePixel(image, i, j);
+			secret_arr[i] = new_pixel;
+			index++;
+		}
+	}
+
+	secret->cols = image->cols;
+	secret->rows = image->rows;
+	secret->image = secret_arr;
+	return secret;
 }
 
 /*
