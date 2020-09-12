@@ -25,15 +25,27 @@ Color *evaluateOnePixel(Image *image, int row, int col)
 	int index = (image->cols * (row - 1)) + col - 1;
 	Color* pixel = image->image[index];
 	int blue = pixel->B;
-	if (blue & 0b00000001 == 1) {
-		Color* white = (Color*) malloc(sizeof(Color*));
-		white->R = 255; white->G = 255; white->B = 255;
-		return white;
+
+	if ((blue & 1) == 1) {
+		Color* changed = (Color*) malloc(sizeof(Color));
+		if (!changed) {
+			exit(-1);
+		}
+		changed->R = 255;
+		changed->G = 255;
+		changed->B = 255;
+		return changed;
 	} else {
-		Color* black = (Color*) malloc(sizeof(Color*));
-		black->R = 0; black->G = 0; black->B = 0;
-		return black;
+		Color* changed = (Color*) malloc(sizeof(Color));
+		if (!changed) {
+			exit(-1);
+		}
+		changed->R = 0;
+		changed->G = 0;
+		changed->B = 0;
+		return changed;
 	}
+
 }
 
 //Given an image, creates a new image extracting the LSB of the B channel.
@@ -41,14 +53,20 @@ Image *steganography(Image *image)
 {
 	//YOUR CODE HERE
 	Image* secret = (Image*) malloc(sizeof(Image));
+	if (!secret) {
+		exit(-1);
+	}
 	Color** secret_arr = (Color**) malloc(image->rows * image->cols * sizeof(Color*));
+	if (!secret_arr) {
+		exit(-1);
+	}
 
 	int index = 0;
 	for (int i = 1; i < image->rows + 1; i++) {
 		for (int j = 1; j < image->cols + 1; j++) {
-			Color* new_pixel = (Color*) malloc(sizeof(Color*));
+			Color* new_pixel;
 			new_pixel = evaluateOnePixel(image, i, j);
-			secret_arr[i] = new_pixel;
+			secret_arr[index] = new_pixel;
 			index++;
 		}
 	}
@@ -56,6 +74,13 @@ Image *steganography(Image *image)
 	secret->cols = image->cols;
 	secret->rows = image->rows;
 	secret->image = secret_arr;
+
+	freeImage(image);
+		// neeed to free the malloc of Image* secret
+	
+	
+
+	
 	return secret;
 }
 
@@ -75,4 +100,23 @@ Make sure to free all memory before returning!
 int main(int argc, char **argv)
 {
 	//YOUR CODE HERE
+	int count = 0;
+	while(argv[count]) {
+		count++;
+	} 
+
+	if (!(count == argc)) {
+		return -1;
+	}
+
+	Image* img = readData(argv[1]);
+
+	Image* secret = steganography(img);
+
+	writeData(secret);
+
+	freeImage(secret);
+
+
+	return 0;
 }
