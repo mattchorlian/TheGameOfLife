@@ -36,9 +36,15 @@ Image *readData(char *filename)
 
 	int product = ((ptr->cols) * (ptr->rows));
 	Color** pixel_arr = (Color**) malloc(product * sizeof(Color*));
+	if (!pixel_arr) {
+		exit(-1);
+	}
 
 	for (int i = 0; i < ptr->cols*ptr->rows; i++) {
 		Color* pixel = (Color*) malloc(sizeof(Color*));
+		if (!pixel) {
+			exit(-1);
+		}
 		fscanf(fp, "%d %d %d\n" , &pixel->R, &pixel->G, &pixel->B);
 		pixel_arr[i] = pixel;
 	}
