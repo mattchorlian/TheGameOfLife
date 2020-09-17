@@ -39,7 +39,7 @@ Image *readData(char *filename)
 
 	for (int i = 0; i < ptr->cols*ptr->rows; i++) {
 		Color* pixel = (Color*) malloc(sizeof(Color*));
-		fscanf(fp, "%d %d %d" , &pixel->R, &pixel->G, &pixel->B);
+		fscanf(fp, "%d %d %d\n" , &pixel->R, &pixel->G, &pixel->B);
 		pixel_arr[i] = pixel;
 	}
 
@@ -59,14 +59,14 @@ void writeData(Image *image)
 	printf("%d %d\n", image->cols, image->rows);
 	printf("%d\n", 255);	
 
-	Color** pixel_arr = image->image;
+
 	int i = 0;
 	for (int r = 0; r < image->rows; r++) {
 		for (int c = 0; c < image->cols; c++) {
 			if (c == image->cols - 1) {
-				printf("%3d %3d %3d", pixel_arr[i]->R, pixel_arr[i]->G, pixel_arr[i]->B);
+				printf("%3d %3d %3d", image->image[i]->R, image->image[i]->G, image->image[i]->B);
 			} else {
-				printf("%3d %3d %3d   ", pixel_arr[i]->R, pixel_arr[i]->G, pixel_arr[i]->B);
+				printf("%3d %3d %3d   ", image->image[i]->R, image->image[i]->G, image->image[i]->B);
 			}
 			
 			
