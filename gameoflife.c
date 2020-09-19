@@ -216,10 +216,16 @@ int main(int argc, char **argv)
 		count++;
 	} 
 
+
 	if (!(count == argc)) {
-		/*printf("usage: ./gameOfLife filename rule \n
-  				  filename is an ASCII PPM file (type P3) with maximum value 255. \n
-   					 rule is a hex number beginning with 0x; Life is 0x1808.")*/
+		char a[100] = "usage: ./gameOfLife filename rule";
+		char b[100] = "filename is an ASCII PPM file (type P3) with maximum value 255.";
+		char c[100] = "rule is a hex number beginning with 0x; Life is 0x1808.";
+
+		printf("%s\n", a);
+		printf("%s\n", b);
+		printf("%s\n", c);
+		
 		return -1;
 	}
 
